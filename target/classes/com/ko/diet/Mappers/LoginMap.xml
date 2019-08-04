@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 이쿼리를 이용하기 위해선 namespace명.id로 접근하면 된다. 파라미터를 map으로 넘겼기 때문에 타입을 정의해줘야한다. 
+	resultType는 Integer로 줬다. int는 안된다 클래스 타입으로 줘야한다. -->
+	
+<mapper namespace="LoginMap">
+	
+	<select id="isLogin" parameterType="com.ko.diet.common.Vo.MemberVo" resultType="Integer">
+	     select 	count(*) cnt
+	    from 	 member
+	    where 	id = #{id} and pwd = #{pwd}
+	</select>
+	
+	<select id="isinform" resultType="com.ko.diet.common.Vo.MemberVo" parameterType="com.ko.diet.common.Vo.MemberVo">
+	    select 	*
+	    from 	 member
+	    where 	id = #{id} and pwd = #{pwd}
+	</select>
+
+	<select id="islist" resultType="com.ko.diet.common.Vo.MemberVo" parameterType="com.ko.diet.common.Vo.MemberVo">
+	    select 	*
+	    from 	 member
+	</select>
+	<insert id="insert_sign"  parameterType="com.ko.diet.common.Vo.MemberVo">
+       INSERT    INTO   member
+                   (
+                    id
+                  , pwd
+                  <if test="name != null and name != ''">, name</if>
+                  <if test="email != null and email != ''">, email</if>
+                  <if test="phone != null and phone != ''">, phone</if>
+                  <if test="indate != null and indate != ''">, indate</if>
+       
+                   )
+       VALUES(         
+                   #{id}
+                  , #{pwd}
+                  <if test="name != null and name != ''">, #{name}</if>
+                  <if test="email != null and email != ''">, #{email}</if>
+                  <if test="phone != null and phone != ''">, #{phone}</if>
+                  <if test="indate != null and indate != ''">, #{indate}</if>
+       )
+   </insert>
+	<update id="update_sign"  parameterType="com.ko.diet.common.Vo.MemberVo">
+       update member set 
+                  name =  #{name}
+                  <if test="pwd != null and pwd != ''">  ,pwd =  #{pwd}</if>
+                  <if test="email != null and email != ''">,email = #{email}</if>
+                  <if test="phone != null and phone != ''"> ,phone = #{phone}</if>
+                  <if test="indate != null and indate != ''"> , indate =  #{indate}</if>
+             where id = #{id}     
+
+   </update>
+	<delete id="delete_member"  parameterType="String">
+     delete from member where id = #{id}
+   </delete>
+   
+   <update id="reset_pwd"  parameterType="com.ko.diet.common.Vo.MemberVo">
+       update member set 
+                 
+                  <if test="pwd != null and pwd != ''">  pwd =  #{pwd}</if>
+                 
+             where id = #{id}     and name = #{name} and phone = #{phone}  
+
+   </update>
+	
+</mapper>
